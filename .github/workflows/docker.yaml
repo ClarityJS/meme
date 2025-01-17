@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     tags:
-      - 'v*'  
+      - 'release-v*'  
 
 jobs:
   build-and-push:
@@ -26,7 +26,7 @@ jobs:
       with:
         images: ${{ secrets.DOCKER_USERNAME }}/${{ github.event.repository.name }}
         tags: |
-          type=semver,pattern={{version}}  
+          type=semver,pattern={{version}},prefix=release-v
           type=semver,pattern=latest,enable={{is_default_branch}}  
 
     - name: 构建并推送 Docker 镜像
