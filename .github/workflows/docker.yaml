@@ -26,19 +26,13 @@ jobs:
       with:
         images: ${{ secrets.DOCKER_USERNAME }}/${{ github.event.repository.name }}
         tags: |
-          type=semver,pattern={{version}},prefix=release-v
+          type=semver,pattern={{version}},prefix=release-v,trimprefix=release-v
           type=semver,pattern=latest,enable={{is_default_branch}}  
 
-    - name: 将标签转换为多行字符串
-      id: convert-tags
-      run: |
-        echo "${{ steps.meta.outputs.tags }}"
-        TAGS=$(echo "${{ steps.meta.outputs.tags }}" | jq -r '.[]')
-        echo "TAGS=$TAGS" >> $GITHUB_OUTPUT
     - name: 构建并推送 Docker 镜像
       uses: docker/build-push-action@v5
       with:
         context: .
         push: true
-        tags: ${{ steps.convert-tags.outputs.TAGS }}
+        tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
