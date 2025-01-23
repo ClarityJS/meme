@@ -4,9 +4,9 @@ on:
   workflow_dispatch:
   schedule:
     - cron: '0 2 * * *'  
-  push:
-    tags:
-      - 'release-v*' 
+  workflow_run:
+    workflows: ["Build and Push Docker Image"]
+    types: [completed]
 
 jobs:
   sever:
